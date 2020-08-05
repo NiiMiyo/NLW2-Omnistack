@@ -1,40 +1,53 @@
 import React from "react";
+import api from "../../services/api";
 
 import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
-import "./styles.css"
+import "./styles.css";
 
-function TeacherItem() {
+export interface Teacher {
+	avatar: string;
+	bio: string;
+	cost: number;
+	id: number;
+	name: string;
+	subject: string;
+	whatsapp: string;
+}
+
+interface TeacherItemProps {
+	teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+	function createNewConnection() {
+		api.post("connections", {
+			user_id: teacher.id
+		})
+	}
+
 	return (
 		<article className="teacher-item">
 			<header>
-				<img
-					src="https://66.media.tumblr.com/62be01666ebbd2646eaa19f1ed093ea8/tumblr_pto8ulLgj01ynhdylo1_500.png"
-					alt="Kira Yoshikage"
-				/>
+				<img src={teacher.avatar} alt={teacher.name} />
 				<div>
-					<strong>Kira Yoshikage</strong>
-					<span>Medicina</span>
+					<strong>{teacher.name}</strong>
+					<span>{teacher.subject}</span>
 				</div>
 			</header>
-			<p>
-				Médico naval que tem pessoas peladas na banheira de casa.
-				<br />
-				<br />
-				Ele é mt pica e tem um chapéuzinho de marinheiro e uma roupinha
-				de marinheiro ele é basicamente Quico's Bizarre Adventure.
-			</p>
+
+			<p>{teacher.bio}</p>
 
 			<footer>
 				<p>
-					Preço/Hora: <strong>R$ 420,69</strong>
+					Preço/Hora: <strong>R$ {teacher.cost}</strong>
 				</p>
-				<button type="button">
+				<a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
 					<img src={whatsappIcon} alt="Whatsapp" />
 					Entrar em contato
-				</button>
+				</a>
 			</footer>
 		</article>
 	);
-}
+};
 
 export default TeacherItem;
